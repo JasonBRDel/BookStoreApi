@@ -5,6 +5,7 @@ using InventoryService.Features.Commands.UpdateBookCommand;
 using InventoryService.Features.Queries.GetAllBooks;
 using InventoryService.Features.Queries.GetBookByName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -55,6 +56,19 @@ namespace InventoryService.Controllers
         {
             var response = await _mediator.Send(new UpdateBookCommand(request));
             return response.succcess ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("test")]
+        public async Task<IActionResult> TestBooks()
+        {
+            return Ok(new { message = "This is book api", user = User.Identity?.Name });
+        }
+
+        [HttpGet("test2")]
+        [Authorize]
+        public async Task<IActionResult> TestBooks2()
+        {
+            return Ok(new { message = "This is book api 2", user = User.Identity?.Name });
         }
     }
 }
