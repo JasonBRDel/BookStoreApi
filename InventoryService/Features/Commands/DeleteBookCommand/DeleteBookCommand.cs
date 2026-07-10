@@ -1,4 +1,4 @@
-﻿using InventoryService.Data;
+﻿using InventoryService.Models;
 using MediatR;
 
 namespace InventoryService.Features.Commands.DeleteBookCommand

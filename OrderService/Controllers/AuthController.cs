@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OrderService.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,7 +24,7 @@ namespace OrderService.Controllers
         public IActionResult Login([FromBody] LoginModel login)
         {
             // Simple hardcoded authentication (replace with DB check)
-            if (login.Username == "admin" && login.Password == "password")
+            if (login.Username == "test" && login.Password == "test")
             {
                 var token = GenerateJwtToken(login.Username);
                 return Ok(new { token });

@@ -22,32 +22,32 @@ namespace InventoryService.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet(Name = "AllBooks")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllBooks()
         {
             var response = await _mediator.Send(new GetAllBooksQuery());
-            return response.succcess ? Ok(response) : BadRequest(response);            
+            return response.Success ? Ok(response) : BadRequest(response);            
         }
 
         [HttpGet(Name = "BookByName")]
         public async Task<IActionResult> GetBookByName([FromQuery][Required]string name)
         {
             var response = await _mediator.Send(new GetBookByNameQuery(name));
-            return response.succcess ? Ok(response) : BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost(Name = "AddBook")]
         public async Task<IActionResult> AddBook([FromBody][Required]AddBookRequest request)
         {
             var response = await _mediator.Send(new AddBookCommand(request));
-            return response.succcess ? Ok(response) : BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpDelete(Name = "RemoveBook/{id}")]
         public async Task<IActionResult> RemoveBook([FromRoute][Required] int id)
         {
             var response = await _mediator.Send(new DeleteBookCommand(id));
-            return response.succcess ? Ok(response) : BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
 
@@ -55,7 +55,7 @@ namespace InventoryService.Controllers
         public async Task<IActionResult> UpdateBook([FromBody][Required] UpdateBookRequest request)
         {
             var response = await _mediator.Send(new UpdateBookCommand(request));
-            return response.succcess ? Ok(response) : BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("test")]

@@ -1,14 +1,16 @@
 ﻿namespace InventoryService.Features.Queries.GetAllBooks
 {
-    public record GetAllBooksDto
-    (
-        List<GetAllBooksBaseDto> GetAllBooksListDtos
-    );
+    //public record GetAllBooksDto
+    //(
+    //    List<GetAllBooksBaseDto> GetAllBooksListDtos
+    //);
 
-    public record GetAllBooksBaseDto
+    public record GetAllBooksDto
      (
          int Id,
-         string Name,
-         int Price
+         string Title,
+         string Author,
+         double Price,
+         int Inventory
      );
 }

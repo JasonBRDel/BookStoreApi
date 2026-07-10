@@ -1,4 +1,4 @@
-﻿using InventoryService.Data;
+﻿using InventoryService.Models.Repositories;
 
 namespace InventoryService.Features.Queries.GetBookByName
 {
@@ -8,8 +8,10 @@ namespace InventoryService.Features.Queries.GetBookByName
         {
             return new(
                 book.Id,
-                book.Name,
-                book.Price
+                book.Title,
+                book.Author,
+                book.Price,
+                book.Inventory
                 );
         }
     }

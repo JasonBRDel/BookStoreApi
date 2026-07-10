@@ -1,4 +1,4 @@
-﻿namespace InventoryService.Data
+﻿namespace InventoryService.Models
 {
     public class BaseError
     {

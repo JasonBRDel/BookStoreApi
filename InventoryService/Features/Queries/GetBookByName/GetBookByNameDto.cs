@@ -3,7 +3,9 @@
     public record GetBookByNameDto
     (
         int Id,
-        string Name,
-        int Price
+        string Title,
+        string Author,
+        double Price,
+        int Inventory
     );
 }
