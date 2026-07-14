@@ -10,8 +10,8 @@ namespace OrderService.Repositories
     {
         public async Task<string> PublishAsync(T item, MessageBus messageBus)
         {
-            var factory = new ConnectionFactory 
-            { 
+            var factory = new ConnectionFactory
+            {
                 HostName = "localhost",
                 Port = 5672,
                 UserName = "guest",
@@ -23,25 +23,27 @@ namespace OrderService.Repositories
 
             using var channel = await connection.CreateChannelAsync();
 
-            await channel.QueueDeclareAsync
-                (
-                    queue: messageBus.QueueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null
-                );
+            await channel.ExchangeDeclareAsync
+             (
+                 exchange: messageBus.Exchange,
+                 type: ExchangeType.Topic,
+                 durable: true,
+                 autoDelete: false,
+                 arguments: null
+             );
 
             var json = JsonConvert.SerializeObject(item);
             var body = Encoding.UTF8.GetBytes(json);
 
-            var properties = new BasicProperties();
-            properties.Persistent = false;
+            var properties = new BasicProperties
+            {
+                Persistent = false
+            };
 
             await channel.BasicPublishAsync
                 (
-                    exchange: string.Empty,
-                    routingKey: messageBus.QueueName,
+                    exchange: messageBus.Exchange,
+                    routingKey: messageBus.RoutingKey,
                     mandatory: false,
                     basicProperties: properties,
                     body: new ReadOnlyMemory<byte>(body)

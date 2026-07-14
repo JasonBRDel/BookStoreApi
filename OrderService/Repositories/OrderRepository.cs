@@ -16,8 +16,9 @@ namespace OrderService.Repositories
             _genericRabbitMQRepository = genericRabbitMQRepository;
             _bus = new MessageBus
             {
-                HostName = "localhost",
-                QueueName = "order_queue"
+                //QueueName = "order_queue",
+                RoutingKey = "order.placed",
+                Exchange = "bookstore_exchange"
             };
         }
 
