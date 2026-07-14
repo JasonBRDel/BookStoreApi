@@ -1,4 +1,4 @@
-﻿namespace OrderService.Data
+﻿namespace OrderService.Models
 {
     public class LoginModel
     {

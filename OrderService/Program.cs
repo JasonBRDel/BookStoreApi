@@ -1,5 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OrderService.Data;
+using OrderService.Repositories;
+using OrderService.Repositories.Interfaces;
+using RabbitMQ.Client;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +35,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddCors(options => {
     options.AddPolicy("Angular", policy =>
     {
@@ -43,6 +52,25 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
+// Register repositories
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+//RabbitMQ Publisher
+builder.Services.AddSingleton<IConnection>(sp =>
+{
+    var factory = new ConnectionFactory
+    {
+        HostName = "",
+        ConsumerDispatchConcurrency = 1
+    };
+
+    return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+});
+
+builder.Services.AddSingleton(typeof(IGenericRabbitMQRepository<>), typeof(GenericRabbitMQRepository<>));
 
 var app = builder.Build();
 

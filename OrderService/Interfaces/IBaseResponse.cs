@@ -1,4 +1,4 @@
-﻿namespace InventoryService.Interfaces
+﻿namespace OrderService.Interfaces
 {
     public interface IBaseResponse<T>
     {

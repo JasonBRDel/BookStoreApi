@@ -1,23 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OrderService.Messaging.Interfaces;
-
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using OrderService.Features.Coomands.CreateOrder;
+using System.ComponentModel.DataAnnotations;
 namespace OrderService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly IMessageProducer _producer;
-        public OrdersController(IMessageProducer producer)
+        private readonly IMediator _mediator;
+
+        public OrdersController(IMediator mediator)
         {
-            _producer = producer;
+            _mediator = mediator;
         }
 
-        //[HttpPost]
-        //public IActionResult CreateOrder(OrderDto order)
-        //{
-        //    _producer.SendMessage(order);
-        //    return Ok(new { Status = "Order Sent" });
-        //}
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody][Required]CreateOrderRequest request)
+        {
+            var response = await _mediator.Send(new CreateOrderCommand(request));
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
     }
 }
