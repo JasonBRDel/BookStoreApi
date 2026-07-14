@@ -6,7 +6,7 @@ using OrderService.Repositories.Interfaces;
 
 namespace OrderService.Features.Coomands.CreateOrder
 {
-    public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, BaseResponse<bool>>
+    public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, BaseResponse<string>>
     {        
         private readonly IOrderRepository _orderRepository;
 
@@ -15,7 +15,7 @@ namespace OrderService.Features.Coomands.CreateOrder
             _orderRepository = orderRepository;
         }
 
-        public async Task<BaseResponse<bool>> Handle(CreateOrderCommand cmd, CancellationToken cancellationToken)
+        public async Task<BaseResponse<string>> Handle(CreateOrderCommand cmd, CancellationToken cancellationToken)
         {
             var orderDto = new Order()
             {
@@ -24,7 +24,7 @@ namespace OrderService.Features.Coomands.CreateOrder
             };
 
             var res = await _orderRepository.CreateOrder(orderDto);
-            return ResponseHelper.Ok(true);
+            return ResponseHelper.Ok(res);
         }
     }
 }
