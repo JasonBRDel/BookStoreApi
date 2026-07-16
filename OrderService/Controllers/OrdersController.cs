@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Coomands.CreateOrder;
+using OrderService.Features.Queries.GetAllOrders;
 using System.ComponentModel.DataAnnotations;
 namespace OrderService.Controllers
 {
@@ -13,6 +14,13 @@ namespace OrderService.Controllers
         public OrdersController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrders()
+        {
+            var response = await _mediator.Send(new GetAllOrdersQuery());
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost]

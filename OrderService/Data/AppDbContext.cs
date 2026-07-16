@@ -8,6 +8,7 @@ namespace OrderService.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Order> Order { get; set; }
+        public DbSet<Book> Book { get; set; }
 
     }
 }

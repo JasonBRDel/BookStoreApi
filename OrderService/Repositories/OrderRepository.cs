@@ -1,4 +1,5 @@
-﻿using OrderService.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
 using OrderService.Models;
 using OrderService.Models.Repositories;
 using OrderService.Repositories.Interfaces;
@@ -25,6 +26,11 @@ namespace OrderService.Repositories
         {
             var res = await _genericRabbitMQRepository.PublishAsync(newOrder, _bus);
             return res;
+        }
+
+        public async Task<IEnumerable<Order>> GetOrders()
+        {
+            return await _context.Order.Include(i => i.Book).ToListAsync();
         }
 
         //CRUD

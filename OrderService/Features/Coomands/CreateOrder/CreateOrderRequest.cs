@@ -3,6 +3,6 @@
     public record CreateOrderRequest
         (
             int BookId,            
-            int Inventory
+            int Quantity
         );
 }

@@ -20,7 +20,8 @@ namespace OrderService.Features.Coomands.CreateOrder
             var orderDto = new Order()
             {
                 BookId = cmd.Request.BookId,
-                Inventory = cmd.Request.Inventory
+                Quantity = cmd.Request.Quantity,
+                OrderDate = DateTime.Now
             };
 
             var res = await _orderRepository.CreateOrder(orderDto);

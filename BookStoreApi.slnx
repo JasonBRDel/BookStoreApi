@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BookStoreWorkerService/BookStoreWorkerService.csproj" Id="59427b43-ecbe-483d-9fe3-a75f1ba7b793" />
   <Project Path="InventoryService/InventoryService.csproj" />
   <Project Path="OrderService/OrderService.csproj" />
 </Solution>

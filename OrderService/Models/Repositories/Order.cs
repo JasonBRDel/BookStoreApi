@@ -8,6 +8,8 @@ namespace OrderService.Models.Repositories
     {
         public int Id { get; set; }
         public int BookId { get; set; }
-        public int Inventory { get; set; }
+        public DateTime OrderDate {  get; set; }
+        public int Quantity { get; set; }
+        public Book Book { get; set; }
     }
 }
