@@ -7,7 +7,7 @@ using OrderService.Repositories.Interfaces;
 namespace OrderService.Features.Coomands.CreateOrder
 {
     public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, BaseResponse<string>>
-    {        
+    {      
         private readonly IOrderRepository _orderRepository;
 
         public CreateOrderHandler(IOrderRepository orderRepository)
@@ -24,7 +24,7 @@ namespace OrderService.Features.Coomands.CreateOrder
                 OrderDate = DateTime.Now
             };
 
-            var res = await _orderRepository.CreateOrder(orderDto);
+            var res = await _orderRepository.CreateOrder(orderDto, cancellationToken);
             return ResponseHelper.Ok(res);
         }
     }

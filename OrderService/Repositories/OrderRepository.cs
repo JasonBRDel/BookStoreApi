@@ -8,29 +8,51 @@ namespace OrderService.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
         private readonly IGenericRabbitMQRepository<Order> _genericRabbitMQRepository;
-        private readonly MessageBus _bus;
+        private MessageBus _bus;
         public OrderRepository(AppDbContext context, IGenericRabbitMQRepository<Order> genericRabbitMQRepository) : base(context)
         {
-            _context = context;
+            _dbContext = context;
             _genericRabbitMQRepository = genericRabbitMQRepository;
             _bus = new MessageBus
             {
-                RoutingKey = "order.placed",
                 Exchange = "bookstore_exchange"
             };
         }
 
-        public async Task<string> CreateOrder(Order newOrder)
+        public async Task<string> CreateOrder(Order newOrder, CancellationToken cancellationToken)
         {
-            var res = await _genericRabbitMQRepository.PublishAsync(newOrder, _bus);
+            _bus.RoutingKey = "order.placed";
+            var res = await _genericRabbitMQRepository.PublishAsync(newOrder, _bus, cancellationToken);
             return res;
         }
 
-        public async Task<IEnumerable<Order>> GetOrders()
+        public async Task<IEnumerable<Order>> GetOrders(CancellationToken cancellationToken)
         {
-            return await _context.Order.Include(i => i.Book).ToListAsync();
+            return await _dbContext.Order.Include(i => i.Book).ToListAsync(cancellationToken);
+        }
+
+        public async Task<bool> DeleteOrder(int orderId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                //_bus.RoutingKey = "order.cancelled";
+                var orderToDelete = await _dbContext.Order
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(i => i.Id == orderId, cancellationToken);
+
+                if (orderToDelete != null)
+                {
+                    _dbContext.Order.Remove(orderToDelete);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception) { 
+                return false;
+            }
         }
 
         //CRUD

@@ -8,7 +8,7 @@ namespace OrderService.Repositories
 {
     public class GenericRabbitMQRepository<T> : IGenericRabbitMQRepository<T> where T : class
     {
-        public async Task<string> PublishAsync(T item, MessageBus messageBus)
+        public async Task<string> PublishAsync(T item, MessageBus messageBus, CancellationToken cancellationToken)
         {
             var factory = new ConnectionFactory
             {
@@ -19,7 +19,7 @@ namespace OrderService.Repositories
                 VirtualHost = "bookstore_vhost"
             };
 
-            using var connection = await factory.CreateConnectionAsync();
+            using var connection = await factory.CreateConnectionAsync(cancellationToken);
 
             using var channel = await connection.CreateChannelAsync();
 
@@ -29,7 +29,8 @@ namespace OrderService.Repositories
                  type: ExchangeType.Topic,
                  durable: true,
                  autoDelete: false,
-                 arguments: null
+                 arguments: null,
+                 cancellationToken: cancellationToken
              );
 
             var json = JsonConvert.SerializeObject(item);
@@ -46,7 +47,8 @@ namespace OrderService.Repositories
                     routingKey: messageBus.RoutingKey,
                     mandatory: false,
                     basicProperties: properties,
-                    body: new ReadOnlyMemory<byte>(body)
+                    body: new ReadOnlyMemory<byte>(body),
+                    cancellationToken: cancellationToken
                 );
 
             return $"Processed item of type {typeof(T).Name}: {item}";

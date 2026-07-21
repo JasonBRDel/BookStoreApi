@@ -1,14 +1,17 @@
 using BookStoreWorkerService;
-
-//var builder = Host.CreateApplicationBuilder(args);
-//builder.Services.AddHostedService<Worker>();
-
-//var host = builder.Build();
-//host.Run();
+using BookStoreWorkerService.DAL;
+using BookStoreWorkerService.Data;
+using Microsoft.EntityFrameworkCore;
 
 IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
+    .ConfigureServices((context, services) =>
     {
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"))
+            );
+
+        services.AddScoped<IOrderRepository, OrderRepository>();
+
         services.AddHostedService<Worker>();
     })
     .Build();

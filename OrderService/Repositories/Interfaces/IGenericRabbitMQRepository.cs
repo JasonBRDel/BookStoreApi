@@ -4,7 +4,7 @@ namespace OrderService.Repositories.Interfaces
 {
     public interface IGenericRabbitMQRepository<T> where T : class
     {
-        Task<string> PublishAsync(T item, MessageBus message);
+        Task<string> PublishAsync(T item, MessageBus message, CancellationToken cancellationToken);
 
     }
 }

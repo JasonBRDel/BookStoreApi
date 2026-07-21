@@ -17,7 +17,7 @@ namespace OrderService.Features.Queries.GetAllOrders
 
         public async Task<BaseResponse<IEnumerable<Order>>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _orderRepository.GetOrders();
+            var orders = await _orderRepository.GetOrders(cancellationToken);
             return ResponseHelper.Ok(orders);
         }
     }

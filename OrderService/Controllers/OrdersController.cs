@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using Azure.Core;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Coomands.CreateOrder;
+using OrderService.Features.Coomands.DeleteOrder;
 using OrderService.Features.Queries.GetAllOrders;
 using System.ComponentModel.DataAnnotations;
 namespace OrderService.Controllers
@@ -27,6 +29,13 @@ namespace OrderService.Controllers
         public async Task<IActionResult> CreateOrder([FromBody][Required]CreateOrderRequest request)
         {
             var response = await _mediator.Send(new CreateOrderCommand(request));
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteOrder([FromRoute][Required] int id)
+        {
+            var response = await _mediator.Send(new DeleteOrderCommand(id));
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }
