@@ -13,6 +13,33 @@ namespace BookStoreWorkerService.DAL
         {
             _appDbContext = appDbContext;
         }
+
+        public async Task CompleteOrder(string json, CancellationToken cancellationToken)
+        {
+            try
+            {
+                JsonSerializerOptions options = new()
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                CompleteOrder? completeOrder = JsonSerializer.Deserialize<CompleteOrder>(json, options);
+
+                if (completeOrder is null)
+                {
+                    Console.WriteLine("Failed to parse JSON: result is null.");
+                    return;
+                }
+
+                await _appDbContext.Database
+                    .ExecuteSqlInterpolatedAsync($"EXEC uspCompleteOrder {completeOrder.id}", cancellationToken);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Invalid JSON: {ex.Message}");
+            }
+        }
+
         public async Task CreateOrder(string json, CancellationToken cancellationToken)
         {
             try
@@ -39,29 +66,7 @@ namespace BookStoreWorkerService.DAL
             }
         }
 
-        //public async Task DeleteOrder(string json, CancellationToken cancellationToken)
-        //{
-        //    try
-        //    {
-        //        JsonSerializerOptions options = new()
-        //        {
-        //            PropertyNameCaseInsensitive = true
-        //        };
 
-        //        int id = JsonSerializer.Deserialize<int>(json, options);
 
-        //        if (string.IsNullOrEmpty(id.ToString()))
-        //        {
-        //            Console.WriteLine("Failed to parse JSON: result is null.");
-        //            return;
-        //        }
-
-        //        await _appDbContext.order
-        //    }
-        //    catch (JsonException ex)
-        //    {
-        //        Console.WriteLine($"Invalid JSON: {ex.Message}");
-        //    }
-        //}
     }
 }

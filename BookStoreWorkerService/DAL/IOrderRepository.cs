@@ -5,6 +5,6 @@ namespace BookStoreWorkerService.DAL
     public interface IOrderRepository
     {
         Task CreateOrder(string createOrder, CancellationToken cancellationToken);
-        //Task DeleteOrder(string deleteOrder, CancellationToken cancellationToken);
+        Task CompleteOrder(string json, CancellationToken cancellationToken);
     }
 }

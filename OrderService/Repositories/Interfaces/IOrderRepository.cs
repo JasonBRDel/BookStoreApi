@@ -5,6 +5,7 @@ namespace OrderService.Repositories.Interfaces
     {
         Task<string> CreateOrder(Order newOrder, CancellationToken cancellationToken);
         Task<IEnumerable<Order>> GetOrders(CancellationToken cancellationToken);
-        Task<bool> DeleteOrder(int OrderId, CancellationToken cancellationToken);
+        Task<bool> DeleteOrder(int orderId, CancellationToken cancellationToken);
+        Task<bool> UpdateOrder(int orderId, CancellationToken cancellationToken);
     }
 }

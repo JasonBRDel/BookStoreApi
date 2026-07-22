@@ -37,7 +37,6 @@ namespace OrderService.Repositories
         {
             try
             {
-                //_bus.RoutingKey = "order.cancelled";
                 var orderToDelete = await _dbContext.Order
                     .AsNoTracking()
                     .FirstOrDefaultAsync(i => i.Id == orderId, cancellationToken);
@@ -55,6 +54,27 @@ namespace OrderService.Repositories
             }
         }
 
-        //CRUD
+        public async Task<bool> UpdateOrder(int orderId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                _bus.RoutingKey = "order.completed";
+                var order = await _dbContext.Order
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(i => i.Id == orderId, cancellationToken);
+            
+                if(order != null)
+                {
+                    await _genericRabbitMQRepository.PublishAsync(order, _bus, cancellationToken);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
     }
 }

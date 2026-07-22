@@ -14,7 +14,6 @@ namespace BookStoreWorkerService
         private readonly string inventoryQueue = "inventory_queue";
         private readonly string bookStoreExchange = "bookstore_exchange";
         private readonly string orderPlaced = "order.placed";
-        private readonly string orderCancelled = "order.cancelled";
         private readonly string orderCompleted = "order.completed";
 
         public Worker(ILogger<Worker> logger, IServiceScopeFactory serviceScopeFactory)
@@ -62,7 +61,7 @@ namespace BookStoreWorkerService
 
                 // Bind queue to multiple routing keys
                 await _channel.QueueBindAsync(inventoryQueue, bookStoreExchange, orderPlaced, cancellationToken: cancellationToken);
-                await _channel.QueueBindAsync(inventoryQueue, bookStoreExchange, orderCancelled, cancellationToken: cancellationToken);
+                await _channel.QueueBindAsync(inventoryQueue, bookStoreExchange, orderCompleted, cancellationToken: cancellationToken);
 
                 _logger.LogInformation("RabbitMQ async connection established.");
             }
@@ -94,12 +93,10 @@ namespace BookStoreWorkerService
                         await orderRepository.CreateOrder(message, stoppingToken);
                         _logger.LogInformation($"Order inserted");
                     }
-                    else if (routingKey == orderCancelled) {
-                        //logic here for delete order
-                    }
                     else if(routingKey == orderCompleted)
                     {
-                        //logic here for delete order
+                        await orderRepository.CompleteOrder(message, stoppingToken);
+                        _logger.LogInformation($"Order completed");
                     }
 
                 }
