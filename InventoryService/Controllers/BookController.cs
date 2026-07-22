@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 namespace InventoryService.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class BookController : ControllerBase
     {
@@ -65,7 +66,6 @@ namespace InventoryService.Controllers
         }
 
         [HttpGet("test2")]
-        [Authorize]
         public async Task<IActionResult> TestBooks2()
         {
             return Ok(new { message = "This is book api 2", user = User.Identity?.Name });

@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Features.Coomands.CreateOrder;
 using OrderService.Features.Coomands.DeleteOrder;
@@ -9,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace OrderService.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
